@@ -1,21 +1,32 @@
 package com.trainingapp.trainingapp_web.controllers;
 
 import com.trainingapp.trainingapp_web.models.ViewModelPost;
+import com.trainingapp.trainingapp_web.models.ViewModelUser;
 import com.trainingapp.trainingapp_web.services.PostManager;
+import com.trainingapp.trainingapp_web.services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Controller
 public class PostsController {
 
     private PostManager postMgr;
+    private UserManager userMgr;
 
     @Autowired
-    public PostsController(PostManager postMgr) {
+    public PostsController(PostManager postMgr, UserManager userMgr) {
         this.postMgr = postMgr;
+        this.userMgr = userMgr;
     }
 
     @GetMapping("/")
@@ -28,6 +39,27 @@ public class PostsController {
     public String showCreatePostForm(Model viewModel) {
         viewModel.addAttribute("post", new ViewModelPost());
         return "/posts/create";
+    }
+
+    @PostMapping("/posts/create")
+    public String createPost(@Valid @ModelAttribute("post") ViewModelPost post, BindingResult validation, Model viewModel, HttpServletRequest request) {
+
+        System.out.println(post.getTitle());
+        System.out.println(post.getBody());
+
+        if(validation.hasErrors()) {
+            System.out.println("get here errors");
+            viewModel.addAttribute("hasErrors", validation.hasErrors());
+            return "/posts/create";
+        }
+
+
+//        ViewModelUser user = (ViewModelUser) request.getSession().getAttribute("user");
+        ViewModelUser user = userMgr.findById((long) 1);
+        post.setUser(user);
+        post.setDate(LocalDateTime.now());
+        postMgr.save(post);
+        return "redirect:/";
     }
 
     @GetMapping("/posts/{id}/{title}")
@@ -45,5 +77,22 @@ public class PostsController {
         ViewModelPost post = postMgr.findById(id);
         viewModel.addAttribute("post", post);
         return "posts/edit";
+    }
+
+    @PostMapping("/posts/edit")
+    public String editPost(@Valid @ModelAttribute("post") ViewModelPost post,
+                           BindingResult validation, Model viewModel) {
+
+        ViewModelPost existingPost = postMgr.findById(post.getId());
+
+        if(validation.hasErrors()) {
+            viewModel.addAttribute("hasErrors", validation.hasErrors());
+            return "posts/edit";
+        }
+
+        post.setDate(existingPost.getDate());
+        post.setUser(existingPost.getUser());
+//        postMgr.update(post);
+        return "redirect:/profile";
     }
 }
