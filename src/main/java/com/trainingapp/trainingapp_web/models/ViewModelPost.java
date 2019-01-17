@@ -1,14 +1,27 @@
 package com.trainingapp.trainingapp_web.models;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class ViewModelPost {
 
     private long id;
+
+    @NotBlank(message = "Title cannot be empty.")
+    @Length(min = 5, max = 100, message="Title must be between 5-100 characters.")
     private String title;
+
+    @NotBlank(message = "Subtitle cannot be empty.")
+    @Length(min = 5, max = 200, message="Subtitle must be between 5-200 characters.")
     private String subtitle;
+
     private String leadImage;
+
+    @NotBlank(message = "Post body cannot be empty.")
+    @Length(min = 5, max = 50000, message="Description must be between 5-50000 characters.")
     private String body;
     private LocalDateTime date;
 
