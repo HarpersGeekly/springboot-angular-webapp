@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Service
 public class PostManager {
 
@@ -21,5 +19,16 @@ public class PostManager {
     public ViewModelPost findById(Long id) {
         return this.restTemplate.getForObject(postApiUrl + "id/" + id, ViewModelPost.class);
     }
+
+    public void save(ViewModelPost post) {
+        System.out.println("Testing create User API----------");
+        this.restTemplate.postForEntity(postApiUrl + "save", post, ViewModelPost.class);
+
+//        HttpHeaders requestHeaders = new HttpHeaders();
+//        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        HttpEntity<ViewModelPost> requestEntity = new HttpEntity<>(post,requestHeaders);
+//        ResponseEntity<ViewModelPost> postResponse = restTemplate.exchange(postApiUrl + "save", HttpMethod.POST, requestEntity, ViewModelPost.class);
+    }
+
 
 }

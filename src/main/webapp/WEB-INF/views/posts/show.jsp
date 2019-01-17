@@ -113,7 +113,6 @@
             });
         };
 
-
         $scope.downVote = function (postId) {
             $http({
                 method: 'POST',
