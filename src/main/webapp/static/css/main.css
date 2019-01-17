@@ -1,0 +1,105 @@
+.flex-center {
+    display:flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.show {
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+.margin-right {
+    margin-right: 20px;
+}
+.margin-right-lt {
+    margin-right: 10px;
+}
+
+:root {
+    --main-bg-color: #fffafb;
+}
+
+body {
+    background-color: var(--main-bg-color);
+}
+
+.CodeMirror-scroll {
+    max-height: 300px;
+}
+.CodeMirror-fullscreen.CodeMirror {
+    max-height: none;
+}
+
+.CodeMirror-fullscreen .CodeMirror-scroll {
+    max-height: none;
+}
+
+#profile-post-image > p > img {
+    max-width:300px;
+}
+
+#index-post-image > p > img {
+    max-width:600px;
+}
+
+#post-wrapper-show-page {
+    margin-bottom: 65px;
+}
+
+.upvoteIcon, .downvoteIcon {
+    color: #8c8c8c;
+}
+
+.upvoteIcon:hover {
+    color: #5bc0de;
+    cursor: pointer;
+}
+
+.upvoteActive {
+    color: #1b6d85;
+}
+
+.downvoteIcon:hover {
+    color: #ce8483;
+    cursor: pointer;
+}
+
+.downvoteActive {
+    color: #761c19;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.edit-delete-dropdown {
+    position: absolute;
+    text-align: center;
+}
+
+.dropdown-edit-btn, .dropdown-delete-btn {
+    display: block;
+    border: none;
+    background-color: #fffafc;
+    padding: 1em;
+    width: 100%;
+}
+
+.dropdown-edit-btn:hover, .dropdown-delete-btn:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.options-ellipsis:hover {
+    cursor: pointer;
+}
+
+.vote-options-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
