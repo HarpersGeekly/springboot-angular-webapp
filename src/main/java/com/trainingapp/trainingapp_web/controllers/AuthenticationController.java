@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +42,8 @@ public class AuthenticationController {
         boolean passwordIsEmpty = user.getPassword().isEmpty();
         ViewModelUser existingUser = userMgr.findByUsername(user.getUsername());
         boolean userExists = (existingUser != null);
-
+        System.out.println(existingUser);
+        System.out.println(existingUser.getPassword());
 //        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && Password.check(user.getPassword(), existingUser.getPassword());
 
 //        if (userExists && !passwordIsEmpty) {
@@ -137,13 +135,13 @@ public class AuthenticationController {
                     "Username is already taken.");
         }
 
-//        ViewModelUser existingEmail = userMgr.findByEmail(user.getEmail());
-//        if (existingEmail != null) {
-//            result.rejectValue(
-//                    "email",
-//                    "user.email",
-//                    "Email is already used.");
-//        }
+        ViewModelUser existingEmail = userMgr.findByEmail(user.getEmail());
+        if (existingEmail != null) {
+            result.rejectValue(
+                    "email",
+                    "user.email",
+                    "Email is already used.");
+        }
 
         //compare passwords:
         if (!passwordConfirmation.equals(user.getPassword())) {
@@ -162,10 +160,10 @@ public class AuthenticationController {
             return "users/register";
         }
 
-//        //TODO need to set to null???
-//        user.setPosts(null);
-//        user.setPassword(Password.hash(user.getPassword()));
+//        user.setPassword(ViewModelPassword.hash(user.getPassword()));
+        user.setPassword(user.getPassword());
         user.setDate(LocalDateTime.now());
+        System.out.println("user:" + user.toString());
         userMgr.save(user);
         request.getSession().setAttribute("user", user);
         return "redirect:/profile";

@@ -29,13 +29,25 @@ public class ViewModelUser {
 
     @NotBlank(message = "Your password cannot be empty.")
     @Length(min = 8, max = 100, message="Your password must be between 8-100 characters.") // BCrypt PasswordEncoder hashes passwords with 60 random characters. Make sure the max is >= 60
-    @JsonIgnore //password is hidden from the client
     private String password;
 
     private LocalDateTime date;
 
     public ViewModelUser(){}
 
+    @Override
+    public String toString() {
+        return "ViewModelUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", bio='" + bio + '\'' +
+                ", password='" + password + '\'' +
+                ", date=" + date +
+                ", posts=" + posts +
+                ", postVotes=" + postVotes +
+                '}';
+    }
 //    ============================= relationships ==========================
 
     private List<ViewModelPost> posts;
@@ -59,6 +71,7 @@ public class ViewModelUser {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -100,7 +113,7 @@ public class ViewModelUser {
     public String formatDate() {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
-//
+    //
     public List<ViewModelPost> getPosts() {
         return posts;
     }
