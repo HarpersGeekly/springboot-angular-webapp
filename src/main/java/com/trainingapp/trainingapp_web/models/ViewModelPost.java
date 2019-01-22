@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ViewModelPost {
-
     private long id;
 
     @NotBlank(message = "Title cannot be empty.")
@@ -28,8 +27,21 @@ public class ViewModelPost {
     private ViewModelUser user;
     private List<ViewModelPostVote> postVotes;
 
-    public ViewModelPost(){}
+    @Override
+    public String toString() {
+        return "ViewModelPost{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", leadImage='" + leadImage + '\'' +
+                ", body='" + body + '\'' +
+                ", date=" + date +
+                ", user=" + user +
+                ", postVotes=" + postVotes +
+                '}';
+    }
 
+    public ViewModelPost(){}
 
     public long getId() {
         return id;
