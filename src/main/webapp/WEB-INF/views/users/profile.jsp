@@ -19,7 +19,7 @@
 <body ng-app="myApp" ng-controller="editUserController as ctrl">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
+<div class="container" ng-init="initMe(${user.id}); fetchUserPosts(${user.id})"> <!-- moved ng-controller to body for now? -->
 
     <div class="alert alert-success alert-dismissible" role="alert" ng-model="successfulUpdateMessage" ng-show="successfulUpdateMessage">
         <strong>You have successfully updated your profile.</strong>
@@ -48,9 +48,9 @@
 
         <div class="tab-pane fade in active" id="posts">
 
-            <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
+            <div ng-if="posts === undefined || posts.length == 0">Posts are empty</div>
 
-            <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
+            <div ng-repeat="post in posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
                 <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
                 <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
                 <span class="margin-right-lt">{{post.hoursMinutes}}</span><span class="margin-right">{{post.formatDate}}</span>
@@ -141,6 +141,7 @@
 
             $scope.originalUser = {};
             $scope.jsonUser = {};
+            $scope.posts = {};
             $scope.editUserForm = false;
             $scope.deleteUserForm = false;
             $scope.successfulUpdateMessage = false;
@@ -157,14 +158,23 @@
                 }).then(function (response) {
                     console.log("success");
                     console.log("Get user username: " + response.data.user.username);
-                    // console.log(response.data);
                     console.log(response.data.user);
                     $scope.jsonUser = response.data.user;
-                    // $scope.jsonUser = response.data;
-                    // $scope.posts = response.data.user.posts;
                     // $scope.postLimit = 3; | limitTo:postLimit
                 }, function (error) {
                     console.log("Get user error: " + error);
+                });
+            };
+
+            $scope.fetchUserPosts = function (userId) {
+                $http({
+                    method: 'GET',
+                    url: 'http://localhost:8888/api/post/userPosts/' + userId
+                }).then(function (response) {
+                    console.log("fetch user posts --- success");
+                    $scope.posts = response.data;
+            }, function (error) {
+                    console.log("fetch user posts --- error: " + error);
                 });
             };
 

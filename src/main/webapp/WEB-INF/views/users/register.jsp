@@ -42,8 +42,6 @@
     <h1>Register here:</h1>
     <form:form action="/register" method="POST" modelAttribute="user">
 
-        <input id="joinDate" name="joinDate" type="hidden">
-
         <div class="form-group">
             <label for="username">Username</label>
             <input id="username" name="username" class="form-control" value="${user.username}">
