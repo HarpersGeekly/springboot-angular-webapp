@@ -27,14 +27,12 @@ public class UsersController {
             return "redirect:/login";
         }
         ViewModelUser user = userMgr.findById(sessionUser.getId());
+        System.out.println("get to profile");
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
     @GetMapping("/profile/{id}/{username}")
     public String showOtherUsersProfile(@PathVariable Long id, Model viewModel) {
-        System.out.println("get here profile");
-        System.out.println("id: "  + id);
-        System.out.println(userMgr.findById(id));
         ViewModelUser user = userMgr.findById(id);
         viewModel.addAttribute("user", user);
         System.out.println(user.getId());

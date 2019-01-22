@@ -2,7 +2,7 @@ package com.trainingapp.trainingapp_web.services;
 
 import com.trainingapp.trainingapp_web.models.ViewModelUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,12 +22,21 @@ public class UserManager {
     }
 
     public ViewModelUser findByUsername(String username) {
-        return this.restTemplate.getForObject(userApiUrl + username, ViewModelUser.class);
+        return this.restTemplate.getForObject(userApiUrl + "username/" + username, ViewModelUser.class);
+    }
+
+    public ViewModelUser findByEmail(String email) {
+        return this.restTemplate.getForObject(userApiUrl + "email/" + email, ViewModelUser.class);
     }
 
     public void save(ViewModelUser user) {
         System.out.println("Testing create User API----------");
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForLocation(userApiUrl, user, ViewModelUser.class);
+////        RestTemplate restTemplate = new RestTemplate();
+////        restTemplate.postForObject(userApiUrl, user, ViewModelUser.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
+        System.out.println("entity: " + entity);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "save", HttpMethod.POST, entity, ViewModelUser.class);
     }
 }

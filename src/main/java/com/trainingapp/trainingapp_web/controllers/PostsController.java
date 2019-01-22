@@ -52,8 +52,6 @@ public class PostsController {
             viewModel.addAttribute("hasErrors", validation.hasErrors());
             return "/posts/create";
         }
-
-
 //        ViewModelUser user = (ViewModelUser) request.getSession().getAttribute("user");
         ViewModelUser user = userMgr.findById((long) 1);
         post.setUser(user);
