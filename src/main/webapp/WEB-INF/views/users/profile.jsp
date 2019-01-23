@@ -157,9 +157,8 @@
                     url: 'http://localhost:8888/api/user/getUser/' + userId //dates show up when I call this url and add the formatting to the POJO User. What if I change url to local service then?
                 }).then(function (response) {
                     console.log("success");
-                    console.log("Get user username: " + response.data.user.username);
-                    console.log(response.data.user);
-                    $scope.jsonUser = response.data.user;
+                    console.log(response.data);
+                    $scope.jsonUser = response.data;
                     // $scope.postLimit = 3; | limitTo:postLimit
                 }, function (error) {
                     console.log("Get user error: " + error);

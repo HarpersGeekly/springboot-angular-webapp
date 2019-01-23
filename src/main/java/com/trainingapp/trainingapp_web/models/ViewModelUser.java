@@ -71,7 +71,6 @@ public class ViewModelUser {
         this.username = username;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }

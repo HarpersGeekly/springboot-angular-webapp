@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -40,21 +39,6 @@ public class AuthenticationController {
     public String login(@ModelAttribute("user") ViewModelUser user, Model viewModel, HttpServletRequest request, RedirectAttributes redirect) {
         boolean usernameIsEmpty = user.getUsername().isEmpty();
         boolean passwordIsEmpty = user.getPassword().isEmpty();
-        ViewModelUser existingUser = userMgr.findByUsername(user.getUsername());
-        boolean userExists = (existingUser != null);
-        System.out.println(existingUser);
-        System.out.println(existingUser.getPassword());
-//        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && Password.check(user.getPassword(), existingUser.getPassword());
-
-//        if (userExists && !passwordIsEmpty) {
-////            boolean passwordCorrect =  Password.check(user.getPassword(), existingUser.getPassword()); // check the submitted password against what I have in the database
-//            // incorrect password:
-//            if (!passwordCorrect) {
-//                viewModel.addAttribute("passwordIsIncorrect", true);
-//                viewModel.addAttribute("user", user);
-//                return "users/login";
-//            }
-//        }
 
         // both empty...
         if (usernameIsEmpty && passwordIsEmpty) {
@@ -74,22 +58,38 @@ public class AuthenticationController {
             return "users/login";
         }
 
+        ViewModelUser existingUser = userMgr.findByUsername(user.getUsername());
+        boolean userExists = (existingUser != null);
+        //        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && ViewModelPassword.check(user.getPassword(), existingUser.getPassword());
+        boolean validAttempt = userExists && (existingUser.getPassword().equals(user.getPassword()));
+
+        if (userExists && !passwordIsEmpty) {
+//            boolean passwordCorrect =  ViewModelPassword.check(user.getPassword(), existingUser.getPassword()); // check the submitted password against what I have in the database
+            boolean passwordCorrect =  existingUser.getPassword().equals(user.getPassword()); // check the submitted password against what I have in the database
+            // incorrect password:
+            if (!passwordCorrect) {
+                viewModel.addAttribute("passwordIsIncorrect", true);
+                viewModel.addAttribute("user", user);
+                return "users/login";
+            }
+        }
+
         // username doesn't exist:
         if ((!usernameIsEmpty && !passwordIsEmpty) && !userExists) {
             request.setAttribute("userNotExist", !userExists);
             return "users/login";
         }
 
-//        if (!validAttempt) {
-//            System.out.println("not a valid attempt");
-//            viewModel.addAttribute("errorMessage", true);
-//            viewModel.addAttribute("user", user);
-//            return "users/login";
-//        } else {
+        if (!validAttempt) {
+            System.out.println("not a valid attempt");
+            viewModel.addAttribute("errorMessage", true);
+            viewModel.addAttribute("user", user);
+            return "users/login";
+        } else {
             request.getSession().setAttribute("user", existingUser);
             redirect.addFlashAttribute("user", existingUser);
             return "redirect:/profile";
-//        }
+        }
     }
 
 //-------------------------------------- Logout ----------------------------------------------------
