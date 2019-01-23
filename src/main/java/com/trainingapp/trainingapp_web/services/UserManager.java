@@ -30,13 +30,18 @@ public class UserManager {
     }
 
     public void save(ViewModelUser user) {
-        System.out.println("Testing create User API----------");
 ////        RestTemplate restTemplate = new RestTemplate();
 ////        restTemplate.postForObject(userApiUrl, user, ViewModelUser.class);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
-        System.out.println("entity: " + entity);
-        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "save", HttpMethod.POST, entity, ViewModelUser.class);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "saveUser", HttpMethod.POST, entity, ViewModelUser.class);
+    }
+
+    public void delete(ViewModelUser user) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "deleteUser", HttpMethod.POST, entity, ViewModelUser.class);
     }
 }
