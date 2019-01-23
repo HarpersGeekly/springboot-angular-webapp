@@ -39,6 +39,11 @@ public class UsersController {
         return "users/profile";
     }
 
+    @PostMapping("/editUser")
+    public void editUser(ViewModelUser user) {
+        userMgr.edit(user);
+    }
+
     @PostMapping("/deleteUser")
     @ResponseStatus(HttpStatus.OK) //used to redirect with flash attributes.
     public ModelAndView deleteUser(@RequestBody ViewModelUser user, HttpServletRequest request, RedirectAttributes redirect) {
@@ -49,6 +54,7 @@ public class UsersController {
             request.getSession().invalidate();
             redirect.addFlashAttribute("deleteIsSuccessful", true);
             redirect.addFlashAttribute("successMessage", "We're sorry to see you go! Your account has been removed from the database.");
+            return new ModelAndView("redirect:/register");
         }
         return new ModelAndView("users/profile");
     }

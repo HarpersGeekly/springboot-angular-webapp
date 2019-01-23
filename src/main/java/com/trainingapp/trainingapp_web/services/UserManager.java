@@ -4,6 +4,7 @@ import com.trainingapp.trainingapp_web.models.ViewModelUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -29,19 +30,24 @@ public class UserManager {
         return this.restTemplate.getForObject(userApiUrl + "email/" + email, ViewModelUser.class);
     }
 
-    public void save(ViewModelUser user) {
-////        RestTemplate restTemplate = new RestTemplate();
-////        restTemplate.postForObject(userApiUrl, user, ViewModelUser.class);
+    public void crudPost(ViewModelUser user, String uniqueUrlPath) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        restTemplate.postForObject(userApiUrl, user, ViewModelUser.class);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
-        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "saveUser", HttpMethod.POST, entity, ViewModelUser.class);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + uniqueUrlPath, HttpMethod.POST, entity, ViewModelUser.class);
+    }
+
+    public void save(ViewModelUser user) {
+        crudPost(user, "saveUser");
+    }
+
+    public void edit(ViewModelUser user) {
+        crudPost(user, "editUser");
     }
 
     public void delete(ViewModelUser user) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
-        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "deleteUser", HttpMethod.POST, entity, ViewModelUser.class);
+        crudPost(user, "deleteUser");
     }
 }
