@@ -1,19 +1,17 @@
 package com.trainingapp.trainingapp_web.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class ViewModelUser {
 
-    private Long id;
+    private Long id; //TODO: issues when registering a user Long vs long, {id:"null"}
 
     @Pattern(regexp = "(?=^.{3,20}$)^[a-zA-Z][a-zA-Z0-9 ]*[._-]?[a-zA-Z0-9 ]+$", message = "Username must be alphanumeric only.")
     @NotBlank(message="Please enter a username.")
@@ -44,15 +42,8 @@ public class ViewModelUser {
                 ", bio='" + bio + '\'' +
                 ", password='" + password + '\'' +
                 ", date=" + date +
-                ", posts=" + posts +
-                ", postVotes=" + postVotes +
                 '}';
     }
-
-//    ============================= relationships ==========================
-
-    private List<ViewModelPost> posts;
-    private List<ViewModelPostVote> postVotes;
 
 //    ============================ getters and setters =====================
 
@@ -114,21 +105,5 @@ public class ViewModelUser {
     @JsonGetter("formatDate")
     public String formatDate() {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
-    }
-    //
-    public List<ViewModelPost> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<ViewModelPost> posts) {
-        this.posts = posts;
-    }
-
-    public List<ViewModelPostVote> getPostVotes() {
-        return postVotes;
-    }
-
-    public void setVotes(List<ViewModelPostVote> votes) {
-        this.postVotes = postVotes;
     }
 }

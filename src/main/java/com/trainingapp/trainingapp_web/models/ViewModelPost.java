@@ -1,7 +1,7 @@
 package com.trainingapp.trainingapp_web.models;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.List;
