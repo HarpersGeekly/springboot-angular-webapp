@@ -113,6 +113,7 @@ public class AuthenticationController {
         return "users/register";
     }
 
+    //TODO only works with POSTMAN : {"username":"user8", "email":"user8@email.com", "bio":"bio", "password":"password"}
     @PostMapping("/register")
     public String register(
             @Valid @ModelAttribute("user") ViewModelUser user,

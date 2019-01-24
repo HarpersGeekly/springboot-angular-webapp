@@ -48,6 +48,7 @@ public class ViewModelUser {
                 ", postVotes=" + postVotes +
                 '}';
     }
+
 //    ============================= relationships ==========================
 
     private List<ViewModelPost> posts;
@@ -59,8 +60,10 @@ public class ViewModelUser {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(Long id) {
+        if(id != null) {
+            this.id = id;
+        }
     }
 
     public String getUsername() {

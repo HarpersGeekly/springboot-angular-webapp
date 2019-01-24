@@ -4,6 +4,7 @@ import com.trainingapp.trainingapp_web.models.ViewModelUser;
 import com.trainingapp.trainingapp_web.services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,17 @@ public class UsersController {
         return "users/profile";
     }
 
+    @GetMapping("/getUser/{id}")
+    @ResponseBody
+    public ViewModelUser fetchUser(@PathVariable("id") Long id) {
+        return userMgr.findById(id);
+    }
+
     @PostMapping("/editUser")
-    public void editUser(ViewModelUser user) {
+    @ResponseBody
+    public ResponseEntity<Void> editUser(@RequestBody ViewModelUser user) {
         userMgr.edit(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/deleteUser")
@@ -53,7 +62,7 @@ public class UsersController {
             request.getSession().removeAttribute("user");
             request.getSession().invalidate();
             redirect.addFlashAttribute("deleteIsSuccessful", true);
-            redirect.addFlashAttribute("successMessage", "We're sorry to see you go! Your account has been removed from the database.");
+            redirect.addFlashAttribute("successMessage", "We're sorry to see you go! Your account has been removed from our database.");
             return new ModelAndView("redirect:/register");
         }
         return new ModelAndView("users/profile");
