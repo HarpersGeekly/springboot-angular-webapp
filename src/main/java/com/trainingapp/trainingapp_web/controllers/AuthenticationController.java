@@ -113,7 +113,7 @@ public class AuthenticationController {
         return "users/register";
     }
 
-    //TODO only works with POSTMAN : {"username":"user8", "email":"user8@email.com", "bio":"bio", "password":"password"}
+    //TODO Registering only works with POSTMAN : {"username":"user8", "email":"user8@email.com", "bio":"bio", "password":"password"}
     @PostMapping("/register")
     public String register(
             @Valid @ModelAttribute("user") ViewModelUser user,
@@ -121,6 +121,15 @@ public class AuthenticationController {
             Model viewModel,
             HttpServletRequest request,
             @RequestParam(name = "confirm_password") String passwordConfirmation) {
+
+        // if there are errors, show the form again.
+        if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(f -> System.out.println((f.getField() + ": " + f.getDefaultMessage())));
+            System.out.println("errors");
+            viewModel.addAttribute("errors", result);
+            viewModel.addAttribute("user", user);
+            return "users/register";
+        }
 
         if (user.getBio().isEmpty()) {
             user.setBio(null);
@@ -152,14 +161,7 @@ public class AuthenticationController {
                     "Your passwords do not match.");
         }
 
-        // if there are errors, show the form again.
-        if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(f -> System.out.println((f.getField() + ": " + f.getDefaultMessage())));
-            System.out.println("errors");
-            viewModel.addAttribute("errors", result);
-            viewModel.addAttribute("user", user);
-            return "users/register";
-        }
+
 
 //        user.setPassword(ViewModelPassword.hash(user.getPassword()));
         user.setPassword(user.getPassword());

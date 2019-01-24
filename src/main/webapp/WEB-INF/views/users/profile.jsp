@@ -16,7 +16,7 @@
     </jsp:include>
 </head>
 
-<body ng-app="myApp" ng-controller="editUserController as ctrl">
+<body ng-app="myApp" ng-controller="editUserController">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
 <div class="container" ng-init="initMe(${user.id}); fetchUserPosts(${user.id})"> <!-- moved ng-controller to body for now? -->
@@ -42,7 +42,7 @@
         </button>
     </div>
 
-    <h3>${user.username}'s profile</h3>
+    <h3>{{jsonUser.username}}'s profile</h3>
     <h4>Joined: {{jsonUser.formatDate}}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
@@ -54,6 +54,7 @@
         <li class="nav active"><a data-toggle="tab" href="#posts">Posts</a></li>
         <li class="nav"><a data-toggle="tab" href="#comments">Comments</a></li>
         <c:if test="${sessionScope.user.id == user.id}">
+            <li class="nav"><a data-toggle="tab" href="#messages">Messages</a></li>
             <li class="nav"><a data-toggle="tab" href="#settings">Account Settings</a></li>
         </c:if>
     </ul>
@@ -99,6 +100,10 @@
             <div ng-if="jsonUser.comments === undefined || jsonUser.comments.length == 0">Comments are empty</div>
         </div>
 
+        <div class="tab-pane fade" id="messages">
+            <div ng-if="jsonUser.messages === undefined || jsonUser.messages.length == 0">Messages are empty</div>
+        </div>
+
         <div class="tab-pane fade" id="settings">
 
             <div class="container">
@@ -117,7 +122,6 @@
                 <div class="container form-group">
 
                     <input type="hidden" name="id" ng-model="jsonUser.id" ng-init="jsonUser.id='${user.id}'">
-                    <%--<input type="hidden" name="id" ng-model="jsonUser.date" ng-init="jsonUser.date='${user.date}'">--%>
 
                     <label for="userEditName">Username:</label>
                     <input id="userEditName" class="form-control" type="text" name="username" ng-model="jsonUser.username" ng-init="jsonUser.username='${user.username}'" required>
@@ -238,7 +242,6 @@
                 });
             };
         });
-
 </script>
 </body>
 </html>
