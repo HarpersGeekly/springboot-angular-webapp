@@ -28,7 +28,21 @@
         </button>
     </div>
 
-    <h3>{{jsonUser.username}}'s profile</h3>
+    <div class="alert alert-danger alert-dismissible" role="alert" ng-model="errorUpdateMessage" ng-show="errorUpdateMessage">
+        <strong>Sorry. Something went wrong while updating your account.</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="alert alert-danger alert-dismissible" role="alert" ng-model="errorDeleteMessage" ng-show="errorDeleteMessage">
+        <strong>Sorry. Something went wrong while deleting your account.</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <h3>${user.username}'s profile</h3>
     <h4>Joined: {{jsonUser.formatDate}}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
@@ -102,17 +116,17 @@
                 <h3>Edit User:</h3>
                 <div class="container form-group">
 
-                    <input type="hidden" name="id" ng-model="originalUser.id" ng-init="originalUser.id='${user.id}'">
-                    <input type="hidden" name="date" ng-model="originalUser.date" ng-init="originalUser.date='${user.date}'">
+                    <input type="hidden" name="id" ng-model="jsonUser.id" ng-init="jsonUser.id='${user.id}'">
+                    <%--<input type="hidden" name="id" ng-model="jsonUser.date" ng-init="jsonUser.date='${user.date}'">--%>
 
                     <label for="userEditName">Username:</label>
-                    <input id="userEditName" class="form-control" type="text" name="username" ng-model="originalUser.username" ng-init="originalUser.username='${user.username}'" required>
+                    <input id="userEditName" class="form-control" type="text" name="username" ng-model="jsonUser.username" ng-init="jsonUser.username='${user.username}'" required>
 
                     <label for="userEditEmail">Email:</label>
-                    <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
+                    <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="jsonUser.email" ng-init="jsonUser.email='${user.email}'" required>
 
                     <label for="userEditBio">Bio:</label>
-                    <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">{{jsonUser.bio}}</textarea>
+                    <textarea id="userEditBio" class="form-control" name="bio" ng-model="jsonUser.bio" ng-init="jsonUser.bio='${user.bio}'" style="resize:none">{{jsonUser.bio}}</textarea>
                 </div>
                 <button class="btn btn-success">
                     Save Changes
@@ -123,7 +137,6 @@
             <form ng-submit="deleteUser()" ng-model="deleteUserForm" ng-show="deleteUserForm">
                 <h2>Remove Account:</h2>
                 <button class="btn btn-danger">
-                        <%--ng-click="deleteUser()"--%>
                     Delete Your Account
                 </button>
             </form>
@@ -139,12 +152,13 @@
 
         app.controller('editUserController', function ($scope, $http) { //$http will be used for accessing the server side data
 
-            $scope.originalUser = {};
             $scope.jsonUser = {};
             $scope.posts = {};
             $scope.editUserForm = false;
             $scope.deleteUserForm = false;
             $scope.successfulUpdateMessage = false;
+            $scope.errorUpdateMessage = false;
+            $scope.errorDeleteMessage = false;
 
             $scope.toggleEditUserForm = function () {
                 $scope.editUserForm = !$scope.editUserForm;
@@ -154,7 +168,7 @@
             $scope.initMe = function (userId) {
                 $http({
                     method: 'GET',
-                    url: 'http://localhost:8888/api/user/getUser/' + userId //dates show up when I call this url and add the formatting to the POJO User. What if I change url to local service then?
+                    url: '/getUser/' + userId
                 }).then(function (response) {
                     console.log("success");
                     console.log(response.data);
@@ -169,24 +183,22 @@
                 let user = $scope.jsonUser;
                 $http({
                     method: 'POST',
-                    url: 'http://localhost:8888/api/user/editUser/',
+                    url: '/editUser',
                     data: JSON.stringify(user)
                 }).then(function (response) {
                     console.log("edit user --- success");
                     console.log(response.data);
-                    // $scope.jsonUser = response.data;
                     $scope.initMe($scope.jsonUser.id);
-
-                    //this is acting weird. Works the first time, then works every other time.
                     $scope.toggleEditUserForm();
                     $scope.successfulUpdateMessage = !$scope.successfulUpdateMessage;
                 }, function (error) {
                     console.log("edit user ---- error: " + error);
+                    $scope.errorUpdateMessage = !$scope.errorUpdateMessage;
                 })
             };
 
             $scope.deleteUser = function() {
-                let user = $scope.originalUser;
+                let user = $scope.jsonUser;
                 $http({
                     method: 'POST',
                     url: '/deleteUser',
@@ -196,6 +208,7 @@
                     window.location.href = '/register';
                 }, (error) => {
                     console.log("Delete user --- error: " + error);
+                    $scope.errorDeleteMessage = !scope.errorDeleteMessage;
                 })
             };
 
@@ -224,15 +237,6 @@
                     console.log("Delete post --- error: " + error);
                 });
             };
-
-            // <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage" ng-show="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
-            // $scope.successfulDeleteMessage = false;
-            // $scope.toggleSuccessfulDeleteMessage = function() {
-            //     $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
-            // };
-
-
-
         });
 
 </script>
@@ -269,9 +273,9 @@
 <%--//     }))--%>
 <%--// };--%>
 
-<%--// let url = '/editUser/' + $scope.originalUser.id.toString();--%>
+<%--// let url = '/editUser/' + $scope.jsonUser.id.toString();--%>
 <%--// $scope.saveUser = function () {--%>
-<%--//     $http.post(url, JSON.stringify($scope.originalUser)--%>
+<%--//     $http.post(url, JSON.stringify($scope.jsonUser)--%>
 <%--//     ).then((function (response) {--%>
 <%--//         console.log(response);--%>
 <%--//         $scope.displayName = response.user.username;--%>
