@@ -39,17 +39,17 @@ public class UserManager {
     }
 
     public void edit(ViewModelUser user) {
-        postToApi(user, "editUser");
+        postToApi(user, "editUser", HttpMethod.PUT);
     }
 
     public void delete(ViewModelUser user) {
-        postToApi(user, "deleteUser");
+        postToApi(user, "deleteUser", HttpMethod.DELETE);
     }
 
-    private void postToApi(ViewModelUser user, String uniqueUrlPath) {
+    private void postToApi(ViewModelUser user, String uniqueUrlPath, HttpMethod httpMethod) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
-        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + uniqueUrlPath, HttpMethod.POST, entity, ViewModelUser.class);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + uniqueUrlPath, httpMethod, entity, ViewModelUser.class);
     }
 }

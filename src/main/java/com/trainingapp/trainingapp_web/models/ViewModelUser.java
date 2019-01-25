@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class ViewModelUser {
 
-    private Long id; //TODO: issues when registering a user Long vs long, {id:"null"}
+    private Long id;
 
     @Pattern(regexp = "(?=^.{3,20}$)^[a-zA-Z][a-zA-Z0-9 ]*[._-]?[a-zA-Z0-9 ]+$", message = "Username must be alphanumeric only.")
     @NotBlank(message="Please enter a username.")
