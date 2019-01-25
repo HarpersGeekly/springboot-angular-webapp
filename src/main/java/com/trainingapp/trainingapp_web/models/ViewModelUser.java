@@ -52,9 +52,7 @@ public class ViewModelUser {
     }
 
     public void setId(Long id) {
-        if(id != null) {
-            this.id = id;
-        }
+        this.id = id;
     }
 
     public String getUsername() {
@@ -106,4 +104,5 @@ public class ViewModelUser {
     public String formatDate() {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
+
 }
