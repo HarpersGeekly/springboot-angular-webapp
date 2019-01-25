@@ -40,6 +40,12 @@ public class PostsController {
         return Arrays.asList(postMgr.fetchPosts());
     }
 
+    @GetMapping("/findPostById/{id}")
+    @ResponseBody
+    public ViewModelPost findPostById(@PathVariable(name = "id") Long id) {
+        return postMgr.findById(id);
+    }
+
     @GetMapping("/findAllPostsByUserId/{id}")
     @ResponseBody
     public List<ViewModelPost> findAllPostsByUserId(@PathVariable(name = "id") Long id) {

@@ -90,7 +90,7 @@
             $http({
                 method: 'GET',
                 // url: 'http://localhost:8888/posts/fetch/' + postId,
-                url: '/postById/' + postId,
+                url: '/findPostById/' + postId,
             }).then(function (response) {
                 console.log("success");
                 console.log(response.data);
