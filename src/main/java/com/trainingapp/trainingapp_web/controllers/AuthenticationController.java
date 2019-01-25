@@ -122,6 +122,13 @@ public class AuthenticationController {
             HttpServletRequest request,
             @RequestParam(name = "confirm_password") String passwordConfirmation) {
 
+        //compare passwords:
+        if (!passwordConfirmation.equals(user.getPassword())) {
+            result.rejectValue(
+                    "password",
+                    "user.password",
+                    "Your passwords do not match.");
+        }
         // if there are errors, show the form again.
         if (result.hasErrors()) {
             result.getFieldErrors().stream().forEach(f -> System.out.println((f.getField() + ": " + f.getDefaultMessage())));
@@ -161,19 +168,17 @@ public class AuthenticationController {
                     "Your passwords do not match.");
         }
 
-
-
 //        user.setPassword(ViewModelPassword.hash(user.getPassword()));
-        user.setPassword(user.getPassword());
         user.setDate(LocalDateTime.now());
-        System.out.println("user:" + user.toString());
-        userMgr.save(user);
-        request.getSession().setAttribute("user", user);
-        return "redirect:/profile";
+        ViewModelUser savedUser = userMgr.save(user);
+        boolean isSaved = savedUser.getId() != null;
+        if(isSaved) {
+            request.getSession().setAttribute("user", savedUser);
+            return "redirect:/profile";
+        } else {
+            viewModel.addAttribute("saveUserError", true);
+            viewModel.addAttribute("saveUserErrorMessage", "Sorry! There was an error while registering.");
+            return "users/register";
+        }
     }
-
-
-
-
-
 }
