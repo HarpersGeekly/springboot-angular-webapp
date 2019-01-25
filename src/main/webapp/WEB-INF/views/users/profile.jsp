@@ -19,7 +19,7 @@
 <body ng-app="myApp" ng-controller="editUserController">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<div class="container" ng-init="initMe(${user.id}); fetchUserPosts(${user.id})"> <!-- moved ng-controller to body for now? -->
+<div class="container" ng-init="initUserById(${user.id}); findAllPostsByUserId(${user.id})"> <!-- moved ng-controller to body for now? -->
 
     <div class="alert alert-success alert-dismissible" role="alert" ng-model="successfulUpdateMessage" ng-show="successfulUpdateMessage">
         <strong>You have successfully updated your profile.</strong>
@@ -174,7 +174,7 @@
                     $scope.deleteUserForm = !$scope.deleteUserForm;
                 };
 
-                $scope.initMe = function (userId) {
+                $scope.initUserById = function (userId) {
                     $http({
                         method: 'GET',
                         url: '/getUser/' + userId
@@ -196,7 +196,7 @@
                         data: JSON.stringify(user)
                     }).then(function (response) {
                         console.log("edit user --- success");
-                        $scope.initMe($scope.jsonUser.id);
+                        $scope.initUserById($scope.jsonUser.id);
 
                         let profileUsername = angular.element(document.querySelector('#profileUsername'));
                         let profileBio = angular.element(document.querySelector('#profileBio'));
@@ -226,10 +226,10 @@
                     })
                 };
 
-                $scope.fetchUserPosts = function (userId) {
+                $scope.findAllPostsByUserId = function (userId) {
                     $http({
                         method: 'GET',
-                        url: '/userPosts/' + userId
+                        url: '/findAllPostsByUserId/' + userId
                     }).then(function (response) {
                         console.log("fetch user posts --- success");
                         $scope.posts = response.data;
@@ -246,7 +246,7 @@
                     }).then(function (response) {
                         console.log("Delete post --- success");
                         console.log(response);
-                        $scope.initMe($scope.jsonUser.id);
+                        $scope.initUserById($scope.jsonUser.id);
                     }, function (error) {
                         console.log("Delete post --- error: " + error);
                     });

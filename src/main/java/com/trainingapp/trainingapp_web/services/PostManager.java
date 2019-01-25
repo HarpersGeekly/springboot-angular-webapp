@@ -20,6 +20,10 @@ public class PostManager {
         return this.restTemplate.getForObject(postApiUrl + "/posts", ViewModelPost[].class);
     }
 
+    public ViewModelPost[] findAllPostsByUserId(Long id) {
+        return this.restTemplate.getForObject(postApiUrl + "/postsByUserId/" + id, ViewModelPost[].class);
+    }
+
     public ViewModelPost findById(Long id) {
         return this.restTemplate.getForObject(postApiUrl + "id/" + id, ViewModelPost.class);
     }

@@ -40,6 +40,12 @@ public class PostsController {
         return Arrays.asList(postMgr.fetchPosts());
     }
 
+    @GetMapping("/findAllPostsByUserId/{id}")
+    @ResponseBody
+    public List<ViewModelPost> findAllPostsByUserId(@PathVariable(name = "id") Long id) {
+        return Arrays.asList(postMgr.findAllPostsByUserId(id));
+    }
+
     @GetMapping("/posts/create")
     public String showCreatePostForm(Model viewModel) {
         viewModel.addAttribute("post", new ViewModelPost());
