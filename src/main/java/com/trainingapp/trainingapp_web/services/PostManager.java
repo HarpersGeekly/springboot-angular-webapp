@@ -17,15 +17,15 @@ public class PostManager {
     }
 
     public ViewModelPost[] fetchPosts() {
-        return this.restTemplate.getForObject(postApiUrl + "/posts", ViewModelPost[].class);
+        return this.restTemplate.getForObject(postApiUrl + "posts", ViewModelPost[].class);
     }
 
     public ViewModelPost[] findAllPostsByUserId(Long id) {
-        return this.restTemplate.getForObject(postApiUrl + "/postsByUserId/" + id, ViewModelPost[].class);
+        return this.restTemplate.getForObject(postApiUrl + "postsByUserId/" + id, ViewModelPost[].class);
     }
 
     public ViewModelPost findById(Long id) {
-        return this.restTemplate.getForObject(postApiUrl + "id/" + id, ViewModelPost.class);
+        return this.restTemplate.getForObject(postApiUrl + "postById/" + id, ViewModelPost.class);
     }
 
     public void save(ViewModelPost post) {
