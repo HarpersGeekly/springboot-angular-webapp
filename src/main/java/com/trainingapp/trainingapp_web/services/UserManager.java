@@ -29,8 +29,13 @@ public class UserManager {
         return this.restTemplate.getForObject(userApiUrl + "email/" + email, ViewModelUser.class);
     }
 
-    public void save(ViewModelUser user) {
-        postToApi(user, "saveUser");
+    public ViewModelUser save(ViewModelUser user) {
+        System.out.println("get to UserManager save()");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
+        ResponseEntity<ViewModelUser> response = restTemplate.exchange( userApiUrl + "saveUser", HttpMethod.POST, entity, ViewModelUser.class);
+        return response.getBody();
     }
 
     public void edit(ViewModelUser user) {
@@ -42,8 +47,6 @@ public class UserManager {
     }
 
     private void postToApi(ViewModelUser user, String uniqueUrlPath) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.postForObject(userApiUrl, user, ViewModelUser.class);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<ViewModelUser> entity = new HttpEntity<>(user, headers);
