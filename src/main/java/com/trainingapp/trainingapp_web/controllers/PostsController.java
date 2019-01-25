@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class PostsController {
@@ -33,6 +32,12 @@ public class PostsController {
     public String index() {
         System.out.println("get to Home Page");
         return "index";
+    }
+
+    @GetMapping("/fetchPosts")
+    @ResponseBody
+    public List<ViewModelPost> fetchPosts() {
+        return Arrays.asList(postMgr.fetchPosts());
     }
 
     @GetMapping("/posts/create")
@@ -93,4 +98,30 @@ public class PostsController {
 //        postMgr.update(post);
         return "redirect:/profile";
     }
+
+    //    =============== post votes ================
+
+//    @PostMapping("/posts/{id}/{type}")
+//    public ViewModelPost vote(@PathVariable(name="id") long id, @PathVariable(name="type") String vote, HttpServletRequest request) {
+
+//        Post post = postSvc.findOne(id);
+//        User user = (User) request.getSession().getAttribute("user");
+//
+//        System.out.println("post: " + post);
+//        System.out.println("user: " + user);
+//        System.out.println("vote type: " + vote);
+//
+//        if (vote.equalsIgnoreCase("upvote")) {
+//            post.addVote(PostVote.up(post, user));
+//            postVoteSvc.savePostVote(PostVote.up(post, user));
+//            System.out.println("up");
+//        } else {
+//            post.addVote(PostVote.down(post, user));
+//            postVoteSvc.savePostVote(PostVote.down(post, user));
+//            System.out.println("down");
+//        }
+//
+//        System.out.println("get here: " + post.getPostVotes());
+//        return post;
+//    }
 }

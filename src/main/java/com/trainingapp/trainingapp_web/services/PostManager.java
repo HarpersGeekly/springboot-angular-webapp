@@ -16,6 +16,10 @@ public class PostManager {
         this.restTemplate = restTemplate;
     }
 
+    public ViewModelPost[] fetchPosts() {
+        return this.restTemplate.getForObject(postApiUrl + "/posts", ViewModelPost[].class);
+    }
+
     public ViewModelPost findById(Long id) {
         return this.restTemplate.getForObject(postApiUrl + "id/" + id, ViewModelPost.class);
     }
@@ -23,11 +27,6 @@ public class PostManager {
     public void save(ViewModelPost post) {
         System.out.println("Testing create User API----------");
         this.restTemplate.postForEntity(postApiUrl + "save", post, ViewModelPost.class);
-
-//        HttpHeaders requestHeaders = new HttpHeaders();
-//        requestHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-//        HttpEntity<ViewModelPost> requestEntity = new HttpEntity<>(post,requestHeaders);
-//        ResponseEntity<ViewModelPost> postResponse = restTemplate.exchange(postApiUrl + "save", HttpMethod.POST, requestEntity, ViewModelPost.class);
     }
 
 

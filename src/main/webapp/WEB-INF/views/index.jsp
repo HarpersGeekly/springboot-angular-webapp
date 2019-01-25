@@ -46,7 +46,7 @@
         $scope.fetchPosts = function() {
                 $http({
                     method: 'GET',
-                    url: 'http://localhost:8888/api/post/posts'
+                    url: '/fetchPosts'
                 }).then(function (response) {
                     console.log("success");
                     console.log(response.data);
