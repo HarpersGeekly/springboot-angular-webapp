@@ -229,7 +229,7 @@
                 $scope.fetchUserPosts = function (userId) {
                     $http({
                         method: 'GET',
-                        url: 'http://localhost:8888/api/post/userPosts/' + userId
+                        url: '/userPosts/' + userId
                     }).then(function (response) {
                         console.log("fetch user posts --- success");
                         $scope.posts = response.data;
