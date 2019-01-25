@@ -39,6 +39,16 @@
         </div>
     </c:if>
 
+    <c:if test="${saveUserError}">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <i class="fas fa-check"></i>
+            <c:out value="${saveUserErrorMessage}"></c:out>
+        </div>
+    </c:if>
+
     <h1>Register here:</h1>
     <form:form action="/register" method="POST" modelAttribute="user">
 
