@@ -27,8 +27,8 @@ public class ViewModelPost {
     @NotBlank(message = "Post body cannot be empty.")
     @Length(min = 5, max = 50000, message="Description must be between 5-50000 characters.")
     private String body;
-    private LocalDateTime date;
 
+    private LocalDateTime date;
     private ViewModelUser user;
     private List<ViewModelPostVote> postVotes;
 
@@ -114,12 +114,18 @@ public class ViewModelPost {
 
     @JsonGetter("hoursMinutes")
     public String hoursMinutes() {
-        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+        if(date != null) {
+            return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+        }
+        return "";
     }
 
     @JsonGetter("formatDate")
     public String formatDate() {
-        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+        if(date != null) {
+            return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+        }
+        return "";
     }
 
     // VOTING LOGIC =============================================================================
