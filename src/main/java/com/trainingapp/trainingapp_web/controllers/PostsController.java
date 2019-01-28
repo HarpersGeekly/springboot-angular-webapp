@@ -80,14 +80,14 @@ public class PostsController {
     }
 
     @GetMapping("/posts/{id}/{title}")
-    public String showPostPage(@PathVariable(name="id") long id, Model viewModel) {
+    public String showPostPage(@PathVariable(name="id") Long id, Model viewModel) {
         ViewModelPost post = postMgr.findById(id);
         viewModel.addAttribute("post", post);
         return "posts/show";
     }
 
     @GetMapping("/posts/{id}/edit")
-    public String showEditPostPage(@PathVariable(name="id") long id, Model viewModel) {
+    public String showEditPostPage(@PathVariable(name="id") Long id, Model viewModel) {
         ViewModelPost post = postMgr.findById(id);
         viewModel.addAttribute("post", post);
         return "posts/edit";
@@ -97,16 +97,13 @@ public class PostsController {
     public String editPost(@Valid @ModelAttribute("post") ViewModelPost post,
                            BindingResult validation, Model viewModel) {
 
-        ViewModelPost existingPost = postMgr.findById(post.getId());
-
         if(validation.hasErrors()) {
+            validation.getFieldErrors().stream().forEach(f -> System.out.println((f.getField() + ": " + f.getDefaultMessage())));
             viewModel.addAttribute("hasErrors", validation.hasErrors());
             return "posts/edit";
         }
 
-        post.setDate(existingPost.getDate());
-        post.setUser(existingPost.getUser());
-//        postMgr.update(post);
+        postMgr.updatePost(post);
         return "redirect:/profile";
     }
 
