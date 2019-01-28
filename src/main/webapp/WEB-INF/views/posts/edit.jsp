@@ -25,7 +25,6 @@
     <form:form action="/posts/edit" method="POST" modelAttribute="post">
 
         <input type="hidden" name="id" value="${post.id}"/>
-        <input type="hidden" name="id" value="${post.date}"/>
 
         <label for="editorTitle"><h3>Title:</h3></label>
         <textarea id="editorTitle" name="title">${post.title}</textarea>
