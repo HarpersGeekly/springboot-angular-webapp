@@ -103,7 +103,20 @@ public class PostsController {
             return "posts/edit";
         }
 
-        postMgr.updatePost(post);
+        postMgr.edit(post);
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/deletePost/{id}")
+    public void deletePost(@PathVariable(name = "id") Long id) {
+        ViewModelPost post = postMgr.findById(id);
+        postMgr.delete(post);
+    }
+
+    @PostMapping("deletePost/{id}/redirect")
+    public String deletePostAndRedirect(@PathVariable(name = "id") Long id) {
+        ViewModelPost post = postMgr.findById(id);
+        postMgr.delete(post);
         return "redirect:/profile";
     }
 
