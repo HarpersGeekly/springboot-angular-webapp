@@ -52,7 +52,7 @@
     <h4 id="profileBio">Bio: ${user.bio}</h4>
 
     <c:if test="${sessionScope.user.id == user.id}">
-        <h3>You are currently logged in.</h3>
+        <h3>You are currently logged in. <span ng-if="posts != undefined || posts.length > 0"><a href="/posts/create"> Create a post.</a></span></h3>
     </c:if>
 
     <ul class="nav nav-tabs">
