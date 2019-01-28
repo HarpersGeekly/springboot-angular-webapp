@@ -128,13 +128,12 @@
         $scope.deletePost = function(post) {
             $http({
                 method: 'POST',
-                url: 'http://localhost:8888/deletePost/' + post.id + '/redirect',
+                url: '/deletePost/' + post.id + '/redirect',
             }).then(function () {
                 $window.location.href = "/profile"
             }, function (error) {
                 console.log("Delete post error: " + error);
             })
-
         };
 
 
