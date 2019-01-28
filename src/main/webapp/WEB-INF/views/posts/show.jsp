@@ -101,6 +101,17 @@
             });
         };
 
+        $scope.deletePost = function(post) {
+            $http({
+                method: 'POST',
+                url: '/deletePost/' + post.id + '/redirect',
+            }).then(function () {
+                $window.location.href = "/profile"
+            }, function (error) {
+                console.log("Delete post error: " + error);
+            })
+        };
+
         $scope.upVote = function (postId) {
             $http({
                 method: 'POST',
@@ -125,16 +136,7 @@
             });
         };
 
-        $scope.deletePost = function(post) {
-            $http({
-                method: 'POST',
-                url: '/deletePost/' + post.id + '/redirect',
-            }).then(function () {
-                $window.location.href = "/profile"
-            }, function (error) {
-                console.log("Delete post error: " + error);
-            })
-        };
+
 
 
 
