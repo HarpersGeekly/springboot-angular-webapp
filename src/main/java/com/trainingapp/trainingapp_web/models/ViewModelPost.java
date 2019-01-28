@@ -11,7 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ViewModelPost {
-    private long id;
+
+    private Long id;
 
     @NotBlank(message = "Title cannot be empty.")
     @Length(min = 5, max = 100, message="Title must be between 5-100 characters.")
@@ -47,11 +48,11 @@ public class ViewModelPost {
 
     public ViewModelPost(){}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -124,7 +125,11 @@ public class ViewModelPost {
     // VOTING LOGIC =============================================================================
     @JsonGetter("voteCount") // saying that this method is only being used as an attribute in show.html
     public int voteCount() {
-        return postVotes.stream().mapToInt(ViewModelPostVote::getType).reduce(0, (sum, vote) -> sum + vote);
+        if(postVotes != null) {
+            return postVotes.stream().mapToInt(ViewModelPostVote::getType).reduce(0, (sum, vote) -> sum + vote);
+        } else {
+            return 0;
+        }
         // takes all the votes and adds 1 or -1 (getType). Needs more users in application to vote and see results.
         // http://www.baeldung.com/java-8-double-colon-operator (::)
         // stream(), mapToInt(), reduce()
