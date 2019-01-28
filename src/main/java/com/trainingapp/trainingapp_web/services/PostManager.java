@@ -2,6 +2,10 @@ package com.trainingapp.trainingapp_web.services;
 
 import com.trainingapp.trainingapp_web.models.ViewModelPost;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,9 +32,12 @@ public class PostManager {
         return this.restTemplate.getForObject(postApiUrl + "postById/" + id, ViewModelPost.class);
     }
 
-    public void save(ViewModelPost post) {
-        System.out.println("Testing create User API----------");
-        this.restTemplate.postForEntity(postApiUrl + "save", post, ViewModelPost.class);
+    public ViewModelPost save(ViewModelPost post) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        HttpEntity<ViewModelPost> entity = new HttpEntity<>(post, headers);
+        ResponseEntity<ViewModelPost> response = restTemplate.exchange( postApiUrl + "savePost", HttpMethod.POST, entity, ViewModelPost.class);
+        return response.getBody();
     }
 
 

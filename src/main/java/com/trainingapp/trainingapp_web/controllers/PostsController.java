@@ -53,7 +53,11 @@ public class PostsController {
     }
 
     @GetMapping("/posts/create")
-    public String showCreatePostForm(Model viewModel) {
+    public String showCreatePostForm(Model viewModel, HttpServletRequest request) {
+        ViewModelUser user = (ViewModelUser) request.getSession().getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
         viewModel.addAttribute("post", new ViewModelPost());
         return "/posts/create";
     }
@@ -61,17 +65,15 @@ public class PostsController {
     @PostMapping("/posts/create")
     public String createPost(@Valid @ModelAttribute("post") ViewModelPost post, BindingResult validation, Model viewModel, HttpServletRequest request) {
 
-        System.out.println(post.getTitle());
-        System.out.println(post.getBody());
-
         if(validation.hasErrors()) {
             System.out.println("get here errors");
             viewModel.addAttribute("hasErrors", validation.hasErrors());
             return "/posts/create";
         }
-//        ViewModelUser user = (ViewModelUser) request.getSession().getAttribute("user");
-        ViewModelUser user = userMgr.findById((long) 1);
+        ViewModelUser sessionUser = (ViewModelUser) request.getSession().getAttribute("user");
+        ViewModelUser user = userMgr.findById(sessionUser.getId());
         post.setUser(user);
+        post.setPostVotes(null);
         post.setDate(LocalDateTime.now());
         postMgr.save(post);
         return "redirect:/";
@@ -79,10 +81,7 @@ public class PostsController {
 
     @GetMapping("/posts/{id}/{title}")
     public String showPostPage(@PathVariable(name="id") long id, Model viewModel) {
-        System.out.println("get here");
         ViewModelPost post = postMgr.findById(id);
-        System.out.println("post: " + post);
-        System.out.println("post.user: " + post.getUser());
         viewModel.addAttribute("post", post);
         return "posts/show";
     }
