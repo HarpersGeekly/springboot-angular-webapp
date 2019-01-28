@@ -42,6 +42,16 @@
         </button>
     </div>
 
+    <c:if test="${deleteIsSuccessful}">
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <i class="fas fa-check"></i>
+            <c:out value="${successMessage}"></c:out>
+        </div>
+    </c:if>
+
     <c:if test="${sessionScope.user.id == user.id}">
         <h3 id="profileUsername">Welcome, ${user.username}!</h3>
     </c:if>
@@ -193,7 +203,7 @@
                     $http({
                         method: 'POST',
                         url: '/editUser',
-                        data: JSON.stringify(user)
+                        data: user
                     }).then(function (response) {
                         console.log("edit user --- success");
                         $scope.initUserById($scope.jsonUser.id);
@@ -216,7 +226,7 @@
                     $http({
                         method: 'POST',
                         url: '/deleteUser',
-                        data: JSON.stringify(user)
+                        data: user
                     }).then((response) => {
                         console.log("Delete user --- success:" + response);
                         window.location.href = '/register';
