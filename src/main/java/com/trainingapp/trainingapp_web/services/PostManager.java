@@ -41,16 +41,17 @@ public class PostManager {
     }
 
     public void edit(ViewModelPost post) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        HttpEntity<ViewModelPost> entity = new HttpEntity<>(post, headers);
-        ResponseEntity<ViewModelPost> response = restTemplate.exchange( postApiUrl + "editPost", HttpMethod.PUT, entity, ViewModelPost.class);
+        postToApi(post, "editPost", HttpMethod.PUT);
     }
 
     public void delete(ViewModelPost post) {
+        postToApi(post, "deletePost", HttpMethod.DELETE);
+    }
+
+    private void postToApi(ViewModelPost user, String uniqueUrlPath, HttpMethod httpMethod) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        HttpEntity<ViewModelPost> entity = new HttpEntity<>(post, headers);
-        ResponseEntity<ViewModelPost> response = restTemplate.exchange( postApiUrl + "deletePost", HttpMethod.DELETE, entity, ViewModelPost.class);
+        HttpEntity<ViewModelPost> entity = new HttpEntity<>(user, headers);
+        ResponseEntity<ViewModelPost> response = restTemplate.exchange( postApiUrl + uniqueUrlPath, httpMethod, entity, ViewModelPost.class);
     }
 }

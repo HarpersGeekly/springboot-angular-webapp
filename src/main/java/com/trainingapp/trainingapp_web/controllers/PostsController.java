@@ -5,10 +5,13 @@ import com.trainingapp.trainingapp_web.models.ViewModelUser;
 import com.trainingapp.trainingapp_web.services.PostManager;
 import com.trainingapp.trainingapp_web.services.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -108,16 +111,24 @@ public class PostsController {
     }
 
     @PostMapping("/deletePost/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void deletePost(@PathVariable(name = "id") Long id) {
         ViewModelPost post = postMgr.findById(id);
         postMgr.delete(post);
     }
 
-    @PostMapping("deletePost/{id}/redirect")
-    public String deletePostAndRedirect(@PathVariable(name = "id") Long id) {
-        ViewModelPost post = postMgr.findById(id);
+    @PostMapping("/deletePost/redirect")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView deletePostAndRedirect(@RequestBody ViewModelPost post, RedirectAttributes redirect) {
         postMgr.delete(post);
-        return "redirect:/profile";
+        //TODO I want to be able to check if post is deleted and then redirect with flash attributes to ensure user it worked. This works for Users, why not here?
+//        boolean deleted = postMgr.findById(post.getId()) == null;
+//        if(deleted) {
+            redirect.addFlashAttribute("deleteIsSuccessful", true);
+            redirect.addFlashAttribute("successMessage", "Post deleted.");
+            return new ModelAndView("users/profile");
+//        }
+//        return new ModelAndView("users/profile");
     }
 
     //    =============== post votes ================
