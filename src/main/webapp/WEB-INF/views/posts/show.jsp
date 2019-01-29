@@ -17,6 +17,9 @@
 <body>
 
 <div ng-controller="postController">
+
+    <img id="spinner" ng-src="https://www.shopthemarketplace.com/images/spinner.gif" width="64px" style="display:none;">
+
     <div class="container" id="post-wrapper-show-page" ng-init="fetchPost(${post.id})">
 
         <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3> <%-- use ng-bind-html for parsing the markdown to html--%>
@@ -64,13 +67,20 @@
                             </a>
                         </div>
                         <div>
-                            <a ng-click="deletePost(post)" class="dropdown-delete-btn">
+                            <a ng-click="deletePost()" class="dropdown-delete-btn">
                                 <i class="fas fa-trash-alt"></i> delete
                             </a>
                         </div>
                     </div>
                 </div>
             </c:if>
+        </div>
+
+        <div id="successDeleteMessage" style="display:none;" class="alert alert-danger alert-dismissible" role="alert" ng-model="errorDeleteMessage" ng-show="errorDeleteMessage">
+            <strong>Sorry. Something went wrong while deleting the post.</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
     </div>
@@ -81,15 +91,14 @@
 
     let app = angular.module('app', ['ngSanitize']);
 
-    app.controller('postController', function($scope, $http, $window) {
+    app.controller('postController', function($scope, $http) {
 
         $scope.post = {};
+        // $scope.errorDeleteMessage = false;
 
         $scope.fetchPost = function(postId) {
-            console.log(postId);
             $http({
                 method: 'GET',
-                // url: 'http://localhost:8888/posts/fetch/' + postId,
                 url: '/findPostById/' + postId,
             }).then(function (response) {
                 console.log("success");
@@ -101,14 +110,21 @@
             });
         };
 
-        $scope.deletePost = function(post) {
+        $scope.deletePost = function () {
+            angular.element("#spinner").show();
+
+            let post = $scope.post;
             $http({
                 method: 'POST',
-                url: '/deletePost/' + post.id + '/redirect',
-            }).then(function () {
-                $window.location.href = "/profile"
-            }, function (error) {
-                console.log("Delete post error: " + error);
+                url: '/deletePost/redirect',
+                data: post
+            }).then((response) => {
+                console.log("Delete post --- success:" + response);
+                window.location.href = '/profile';
+            }, (error) => {
+                console.log("Delete post --- error: " + error);
+                // $scope.errorDeleteMessage = !$scope.errorDeleteMessage;
+                angular.element("#successDeleteMessage").show(); // use this instead
             })
         };
 
