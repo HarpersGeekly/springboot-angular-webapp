@@ -236,7 +236,7 @@
                     })
                 };
 
-                $scope.findAllPostsByUserId = function (userId) {
+                $scope.findAllPostsByUserId = function(userId) {
                     $http({
                         method: 'GET',
                         url: '/findAllPostsByUserId/' + userId
@@ -248,15 +248,15 @@
                     });
                 };
 
-                $scope.deletePost = function (post) {
+                $scope.deletePost = function(post) {
                     // $scope.jsonUser.posts.splice($scope.jsonUser.posts.indexOf(post),1);
                     $http({
                         method: 'POST',
-                        url: '/deletePost/' + post.id
+                        url: '/deletePost/' + post.id,
                     }).then(function (response) {
                         console.log("Delete post --- success");
                         console.log(response);
-                        $scope.initUserById($scope.jsonUser.id);
+                        $scope.findAllPostsByUserId($scope.jsonUser.id);
                     }, function (error) {
                         console.log("Delete post --- error: " + error);
                     });
